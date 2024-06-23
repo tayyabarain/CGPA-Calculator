@@ -1,0 +1,84 @@
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.*;
+
+public class CGPACalculator extends JFrame implements ActionListener {
+
+    private JTextField[] gradeFields;
+    private JTextField[] creditHourFields;
+    private JButton calculateButton;
+    private JLabel resultLabel;
+
+    public CGPACalculator() {
+        setTitle("CGPA Calculator");
+        setSize(300, 200);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(new GridLayout(0, 2));
+
+        JLabel gradeLabel = new JLabel("Grade");
+        JLabel creditHourLabel = new JLabel("Credit Hours");
+        add(gradeLabel);
+        add(creditHourLabel);
+
+        gradeFields = new JTextField[5];
+        creditHourFields = new JTextField[5];
+        for (int i = 0; i < 5; i++) {
+            gradeFields[i] = new JTextField();
+            creditHourFields[i] = new JTextField();
+            add(gradeFields[i]);
+            add(creditHourFields[i]);
+        }
+
+        calculateButton = new JButton("Calculate CGPA");
+        calculateButton.addActionListener(this);
+        resultLabel = new JLabel(" ");
+        add(calculateButton);
+        add(resultLabel);
+
+        setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == calculateButton) {
+            double totalCredits = 0;
+            double totalGradePoints = 0;
+
+            for (int i = 0; i < 5; i++) {
+                String grade = gradeFields[i].getText();
+                double creditHours = Double.parseDouble(creditHourFields[i].getText());
+
+                double gradePoint = gradeToGradePoint(grade);
+                totalCredits += creditHours;
+                totalGradePoints += gradePoint * creditHours;
+            }
+
+            double cgpa = totalGradePoints / totalCredits;
+            resultLabel.setText("Your CGPA is: " + cgpa);
+
+            
+        }
+    }
+
+    private double gradeToGradePoint(String grade) {
+        switch (grade.toUpperCase()) {
+            case "A":
+                return 4.0;
+            case "B":
+                return 3.0;
+            case "C":
+                return 2.0;
+            case "D":
+                return 1.0;
+            case "F":
+                return 0.0;
+            default:
+                return 0.0; // If an invalid grade is entered, assume it as 0 grade points
+        }
+    }
+
+    public static void main(String[] args) {
+        new CGPACalculator();
+    }
+}
